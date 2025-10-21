@@ -111,7 +111,7 @@
 
         /* Buttons - Primary action style */
         .button-section {
-             margin-top: 10px; /* Reduced margin to look tighter */
+             margin-top: 10px;
         }
         .confirm-btn, .sure-btn {
             background: #007bff;
@@ -133,7 +133,7 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         .sure-btn {
-            background: #ffc107; /* Warning color */
+            background: #ffc107;
             color: #333;
         }
         .sure-btn:hover {
@@ -146,8 +146,8 @@
             margin-top: 20px;
             padding: 30px;
             border-radius: 8px;
-            background-color: #fff3cd; /* Light warning background */
-            color: #856404; /* Dark warning text */
+            background-color: #fff3cd;
+            color: #856404;
             font-size: 1.5em;
             font-weight: bold;
             box-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
@@ -200,8 +200,6 @@
     </div>
 
     <script>
-        // --- Core Prank Logic (same as before, but with updated text) ---
-
         // 1. Visitor Counter
         let count = 148;
         const countElement = document.getElementById('visitor-count');
@@ -296,12 +294,10 @@
                         emoji.style.animationPlayState = 'running';
                     });
                     
-                    // === KICK-OUT ACTION (The new part!) ===
-                    // Wait 2000 milliseconds (2 seconds), then redirect
+                    // KICK-OUT ACTION: Redirect after 2 seconds
                     setTimeout(() => {
                         window.location.replace("https://www.google.com");
                     }, 2000);
-                    // ======================================
 
                 }, 10);
 
@@ -311,6 +307,3 @@
 
 </body>
 </html>
-setTimeout(() => {
-    window.location.replace("https://www.google.com");
-}, 2000);
