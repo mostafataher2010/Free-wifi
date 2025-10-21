@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Official Service Initialization</title>
+    <title>Service Access Gateway</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        /* Base Styles & Gradient Background */
+        /* =================================
+           1. BASE STYLES & LAYOUT
+           ================================= */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
@@ -15,21 +17,21 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(145deg, #1e3c72, #2a5298); /* Deep, corporate blue gradient */
+            /* Deep, corporate blue gradient */
+            background: linear-gradient(145deg, #1e3c72, #2a5298); 
             color: #e0e0e0;
-            transition: background 1s ease-in-out;
         }
-
+        
         /* Container Card - Sleek and modern */
         .container {
-            background-color: rgba(255, 255, 255, 0.98); /* Near-white background for professionalism */
+            background-color: rgba(255, 255, 255, 0.98); 
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
             text-align: center;
             width: 90%;
             max-width: 480px;
-            color: #333; /* Dark text on light background */
+            color: #333; 
             animation: cardLoad 0.8s ease-out;
         }
         @keyframes cardLoad {
@@ -45,16 +47,16 @@
         }
         .status-icon {
             font-size: 2.5em;
-            color: #007bff; /* Primary brand color */
+            color: #007bff;
             margin-bottom: 10px;
         }
         #typing-message {
             font-weight: 300;
             color: #666;
-            min-height: 1.2em;
+            min-height: 1.2em; /* Ensure stable layout */
         }
 
-        /* Visitor Counter - Tucked away for realism */
+        /* Visitor Counter - Subtle and realistic */
         .counter {
             margin: 15px 0;
             font-size: 0.8em;
@@ -67,7 +69,10 @@
             color: #333;
         }
 
-        /* Language Selector - Clean buttons */
+        /* =================================
+           2. INPUTS & BUTTONS
+           ================================= */
+        /* Language Selector */
         .language-selector button {
             background-color: #f0f0f0;
             border: 1px solid #ccc;
@@ -86,7 +91,7 @@
             border-color: #007bff;
         }
 
-        /* Input Fields - Professional look */
+        /* Input Fields */
         .input-fields {
             margin-top: 25px;
             display: none;
@@ -109,10 +114,7 @@
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
         }
 
-        /* Buttons - Primary action style */
-        .button-section {
-             margin-top: 10px;
-        }
+        /* Primary Action Buttons */
         .confirm-btn, .sure-btn {
             background: #007bff;
             border: none;
@@ -133,21 +135,23 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         .sure-btn {
-            background: #ffc107;
+            background: #ffc107; /* Warning color */
             color: #333;
         }
         .sure-btn:hover {
             background: #e0a800;
         }
 
-        /* Prank Message - Final state */
+        /* =================================
+           3. PRANK MESSAGE & ANIMATION
+           ================================= */
         .prank-message {
             display: none;
             margin-top: 20px;
             padding: 30px;
             border-radius: 8px;
-            background-color: #fff3cd;
-            color: #856404;
+            background-color: #fff3cd; 
+            color: #856404; 
             font-size: 1.5em;
             font-weight: bold;
             box-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
@@ -157,6 +161,7 @@
         .emoji {
             display: inline-block;
             animation: bounce 0.6s infinite alternate ease-in-out;
+            animation-play-state: paused; /* Start paused, run on prank */
         }
         @keyframes bounce {
             from { transform: translateY(0); }
@@ -200,13 +205,19 @@
     </div>
 
     <script>
+        // =================================
+        // JAVASCRIPT LOGIC
+        // =================================
+
         // 1. Visitor Counter
         let count = 148;
         const countElement = document.getElementById('visitor-count');
         function updateCounter() {
-            count += Math.floor(Math.random() * 2) + 1;
+            // Increase by 1 or 2 for realistic fluctuations
+            count += Math.floor(Math.random() * 2) + 1; 
             countElement.textContent = count;
         }
+        // Update every 3 seconds
         setInterval(updateCounter, 3000); 
         updateCounter();
 
@@ -221,6 +232,7 @@
                 setTimeout(typeText, 50); 
             }
         }
+        // Start typing after initial card animation
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(typeText, 700); 
         });
@@ -231,18 +243,20 @@
         const confirmBtn = document.getElementById('confirm-btn');
 
         function selectLanguage(lang) {
+            // Fade out language selector
             langSelector.style.opacity = '0';
             setTimeout(() => {
                 langSelector.style.display = 'none';
 
+                // Fade in input fields and confirmation button
                 inputFields.style.display = 'block';
+                confirmBtn.style.display = 'block';
                 setTimeout(() => {
                     inputFields.style.opacity = '1';
-                    confirmBtn.style.display = 'block';
                 }, 10);
             }, 400);
 
-            // Update placeholders and button text for Arabic
+            // Update placeholders/text for Arabic realism
             if (lang === 'ar') {
                  document.getElementById('name-input').placeholder = "معرف المستخدم (الاسم)";
                  document.getElementById('phone-input').placeholder = "رقم هاتف الجهاز";
@@ -257,10 +271,12 @@
         const sureBtn = document.getElementById('sure-btn');
 
         function showSureButton() {
+            // Fade out Confirm
             confirmBtn.style.opacity = '0';
             setTimeout(() => {
                 confirmBtn.style.display = 'none';
                 
+                // Show and fade in 'You Sure?' button
                 sureBtn.style.display = 'block';
                 setTimeout(() => {
                     sureBtn.style.opacity = '1';
@@ -273,16 +289,18 @@
         const mainContainer = document.getElementById('main-container');
 
         function triggerPrank() {
+            // Fade out the main container
             mainContainer.style.opacity = '0';
             
             setTimeout(() => {
-                // Display the prank message
+                // Prepare container for the prank message
                 mainContainer.innerHTML = ''; 
                 mainContainer.style.opacity = '1';
                 mainContainer.style.background = 'none';
                 mainContainer.style.boxShadow = 'none';
                 mainContainer.style.color = '#fff';
 
+                // Insert and show the prank message
                 mainContainer.appendChild(prankMessage);
                 prankMessage.style.display = 'block';
 
