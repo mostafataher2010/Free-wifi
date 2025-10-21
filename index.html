@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* Define the "smooth wifi" background */
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e0f2f1 0%, #b2ebf2 100%); /* Soft blue gradient */
+            transition: background 1s ease-in-out;
+        }
+
+        /* Subtle dot pattern for the wifi effect */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+            background-image: radial-gradient(#ffffff 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+        }
+
+        .container {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Generic transition for smooth appearance/disappearance */
+        .animated-element {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out, height 0.5s ease-out, margin 0.5s ease-out;
+            will-change: opacity, transform, height;
+        }
+
+        .show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Typing cursor animation */
+        .typing-text::after {
+            content: '|';
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <div id="app" class="container w-full max-w-sm p-6 rounded-2xl text-center" dir="ltr">
+        <h1 id="portal-title" class="text-3xl font-extrabold text-cyan-700 mb-6">WiFi Portal</h1>
+
+        <!-- Stage 1 & 2: Typing Messages -->
+        <p id="message-container" class="typing-text text-xl font-semibold text-gray-800 h-10 mb-8 overflow-hidden"></p>
+
+        <!-- Stage 2: Language Selection -->
+        <div id="language-section" class="animated-element flex justify-center space-x-4 mb-8 h-0 overflow-hidden">
+            <button onclick="selectLanguage('ar')" class="language-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-xl shadow-lg transition duration-300 transform hover:scale-105">
+                العربية
+            </button>
+            <button onclick="selectLanguage('en')" class="language-btn bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-6 rounded-xl shadow-lg transition duration-300 transform hover:scale-105">
+                English
+            </button>
+        </div>
+
+        <!-- Stage 3: Input Fields -->
+        <div id="input-section" class="animated-element space-y-4 mb-8 h-0 overflow-hidden">
+            <input type="text" id="name-input" oninput="checkInputs()" data-placeholder-key="namePlaceholder" placeholder="Enter Your Name" class="w-full p-3 border-2 border-cyan-300 focus:border-cyan-500 rounded-xl outline-none transition duration-300 shadow-inner" disabled>
+            <input type="tel" id="phone-input" oninput="checkInputs()" data-placeholder-key="phonePlaceholder" placeholder="Enter Your Phone Number" class="w-full p-3 border-2 border-cyan-300 focus:border-cyan-500 rounded-xl outline-none transition duration-300 shadow-inner" disabled>
+        </div>
+
+        <!-- Stage 4: Confirmation Buttons -->
+        <div id="confirmation-section" class="h-10">
+            <button id="confirm-btn" onclick="showSureButton()" data-text-key="confirmBtn" class="animated-element w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-xl transition duration-300 transform hover:scale-[1.01]" disabled>
+                Confirm
+            </button>
+
+            <button id="sure-btn" onclick="showFinalJoke()" data-text-key="sureBtn" class="animated-element w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl shadow-xl transition duration-300 transform hover:scale-[1.01]">
+                You Sure? 🤨
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const messageEl = document.getElementById('message-container');
+        const langSection = document.getElementById('language-section');
+        const inputSection = document.getElementById('input-section');
+        const nameInput = document.getElementById('name-input');
+        const phoneInput = document.getElementById('phone-input');
+        const confirmBtn = document.getElementById('confirm-btn');
+        const sureBtn = document.getElementById('sure-btn');
+        const portalTitle = document.getElementById('portal-title');
+        const appContainer = document.getElementById('app');
+
+        let currentLang = 'en'; // Initial language state
+
+        // --- Multi-Language Content ---
+        const languageContent = {
+            en: {
+                portalTitle: "WiFi Portal",
+                welcomeMessage: "WELCOME TO OUR FREE WIFI😁📶",
+                langPrompt: "WOULD YOU LIKE TO CHANGE LANGUAGES??",
+                namePlaceholder: "Enter Your Name",
+                phonePlaceholder: "Enter Your Phone Number",
+                confirmBtn: "Confirm",
+                sureBtn: "You Sure? 🤨",
+                finalJoke: "you actually believed this that there's a free wifi😂😂 go waste your mobile data boy😂😂"
+            },
+            ar: {
+                portalTitle: "بوابة الواي فاي",
+                welcomeMessage: "مرحباً بكم في شبكة الواي فاي المجانية لدينا😁📶",
+                langPrompt: "هل تود تغيير اللغة؟",
+                namePlaceholder: "أدخل اسمك",
+                phonePlaceholder: "أدخل رقم هاتفك",
+                confirmBtn: "تأكيد",
+                sureBtn: "هل أنت متأكد؟ 🤨",
+                finalJoke: "هل صدقت حقاً أن هناك واي فاي مجاني؟ 😂😂😂 اذهب وأهدر بيانات هاتفك يا فتى 😂😂😂"
+            }
+        };
+
+        // --- Utility Functions ---
+
+        const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+        /** Updates static text content and direction based on the selected language. */
+        function updateUI(lang) {
+            currentLang = lang;
+            const content = languageContent[lang];
+
+            // 1. Set the direction for the main container
+            const dir = lang === 'ar' ? 'rtl' : 'ltr';
+            appContainer.setAttribute('dir', dir);
+            
+            // 2. Update the main title
+            portalTitle.textContent = content.portalTitle;
+
+            // 3. Update buttons/placeholders
+            confirmBtn.textContent = content.confirmBtn;
+            sureBtn.textContent = content.sureBtn;
+            nameInput.placeholder = content.namePlaceholder;
+            phoneInput.placeholder = content.phonePlaceholder;
+
+            // Adjust input alignment for RTL
+            const inputClass = lang === 'ar' ? 'text-right' : 'text-left';
+            nameInput.classList.remove('text-left', 'text-right');
+            phoneInput.classList.remove('text-left', 'text-right');
+            nameInput.classList.add(inputClass);
+            phoneInput.classList.add(inputClass);
+        }
+
+        /**
+         * Simulates a typing effect by adding characters one by one.
+         * @param {string} message - The text to type.
+         */
+        async function typeMessage(message) {
+            messageEl.textContent = '';
+            for (let i = 0; i < message.length; i++) {
+                messageEl.textContent += message.charAt(i);
+                await sleep(i < 5 ? 50 : 70); // Faster at the start, then smooth
+            }
+            messageEl.classList.remove('typing-text'); // Remove cursor after typing
+        }
+
+        /** Fades out an element by removing the 'show' class and setting height to 0. */
+        function fadeOut(element) {
+            element.classList.remove('show');
+            // Give time for opacity transition before collapsing height
+            setTimeout(() => {
+                element.style.height = '0px';
+                element.style.marginBottom = '0px';
+            }, 500);
+        }
+
+        /** Fades in an element by setting height, adding 'show' class. */
+        function fadeIn(element, height, marginBottom = '2rem') {
+            element.style.height = height;
+            element.style.marginBottom = marginBottom;
+            setTimeout(() => {
+                element.classList.add('show');
+            }, 10);
+        }
+
+        // --- Stage Logic ---
+
+        async function startFlow() {
+            // Ensure only the message container is visible initially
+            sureBtn.classList.add('hidden');
+            confirmBtn.classList.add('hidden');
+
+            // --- Stage 1: Welcome Message ---
+            messageEl.classList.add('typing-text');
+            const welcomeMsg = languageContent[currentLang].welcomeMessage;
+            await typeMessage(welcomeMsg);
+            await sleep(3000); // Wait 3 seconds
+
+            fadeOut(messageEl);
+            await sleep(700); // Wait for fade out
+
+            // --- Stage 2: Language Selection Prompt ---
+            messageEl.classList.add('typing-text');
+            messageEl.classList.add('show');
+            messageEl.style.transform = 'translateY(-20px)'; // Slide slightly up
+            const langPrompt = languageContent[currentLang].langPrompt;
+            await typeMessage(langPrompt);
+            
+            // Slide up and show buttons
+            langSection.style.height = 'auto'; // Set height to auto temporarily
+            const computedHeight = langSection.offsetHeight + 'px';
+            langSection.style.height = '0px'; // Reset height
+            fadeIn(langSection, computedHeight);
+        }
+
+        function selectLanguage(lang) {
+            // 1. Update the UI to the selected language
+            updateUI(lang);
+
+            // 2. Start fade out of current elements (message and language buttons)
+            fadeOut(messageEl);
+            fadeOut(langSection);
+
+            // Hide the cursor
+            messageEl.classList.remove('typing-text');
+
+            // 3. Enable and show input fields after the transition
+            setTimeout(() => {
+                inputSection.classList.remove('hidden');
+
+                // Compute height for smooth transition
+                inputSection.style.height = 'auto';
+                const computedHeight = inputSection.offsetHeight + 'px';
+                inputSection.style.height = '0px';
+
+                fadeIn(inputSection, computedHeight);
+                nameInput.disabled = false;
+                phoneInput.disabled = false;
+            }, 700);
+        }
+
+        function checkInputs() {
+            const isFilled = nameInput.value.trim() !== '' && phoneInput.value.trim() !== '';
+
+            if (isFilled && confirmBtn.classList.contains('hidden')) {
+                // Inputs are filled, show Confirm button
+                confirmBtn.classList.remove('hidden');
+                confirmBtn.classList.remove('animated-element');
+                fadeIn(confirmBtn, 'auto', '0'); // Show it quickly
+                confirmBtn.classList.add('show');
+                confirmBtn.disabled = false;
+
+            } else if (!isFilled && !confirmBtn.classList.contains('hidden')) {
+                // Inputs are emptied, hide Confirm button
+                confirmBtn.classList.remove('show');
+                confirmBtn.disabled = true;
+                setTimeout(() => {
+                    confirmBtn.classList.add('hidden');
+                }, 500);
+            }
+        }
+
+        function showSureButton() {
+            // Fade out confirm button
+            fadeOut(confirmBtn);
+
+            // Show 'You Sure?' button
+            setTimeout(() => {
+                confirmBtn.classList.add('hidden');
+                sureBtn.classList.remove('hidden');
+                sureBtn.classList.remove('animated-element');
+                fadeIn(sureBtn, 'auto', '0');
+                sureBtn.classList.add('show');
+            }, 600);
+        }
+
+        async function showFinalJoke() {
+            // Fade out everything
+            fadeOut(inputSection);
+            fadeOut(sureBtn);
+            
+            // Reset message container for the final message
+            messageEl.classList.add('typing-text');
+            messageEl.classList.remove('hidden');
+            messageEl.classList.add('show');
+            messageEl.style.height = 'auto';
+            messageEl.style.transform = 'translateY(0)';
+            messageEl.textContent = '';
+            
+            appContainer.classList.add('opacity-0', 'scale-95');
+            appContainer.style.transition = 'opacity 1s ease-out, transform 1s ease-out';
+
+
+            await sleep(1000); // Wait for the fade out of buttons/inputs
+
+            // Start typing the final joke in the selected language
+            appContainer.classList.remove('opacity-0', 'scale-95');
+            
+            const finalMessage = languageContent[currentLang].finalJoke;
+            await typeMessage(finalMessage);
+        }
+
+        // Start the process when the page loads
+        window.onload = startFlow;
+    </script>
+</body>
+</html>
+
